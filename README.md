@@ -2,6 +2,12 @@
 
 # Repoteca
 
+[![CI](https://github.com/awarefractal/repoteca/actions/workflows/ci.yml/badge.svg)](https://github.com/awarefractal/repoteca/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/awarefractal/repoteca/actions/workflows/codeql.yml/badge.svg)](https://github.com/awarefractal/repoteca/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/github/license/awarefractal/repoteca)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/node-%E2%89%A520-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
+
 **A garage for your GitHub repos.** Keep them cataloged, installed, tried out and up to date in one place, instead of scattered all over your disk.
 
 Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so you can try it right away, tells you when it has new commits, and keeps your own notes and demos next to it. Everything is local, with zero dependencies and no database (the catalog is a readable JSON file).
