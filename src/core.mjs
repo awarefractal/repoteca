@@ -95,12 +95,17 @@ const tagList = (t) =>
 
 // ---------- CRUD ----------
 
+// El repo de Repoteca mismo, y cualquier repo que se llame "repoteca" (un fork, por ejemplo), no entra al catálogo.
+const SELF_REPO = 'awarefractal/repoteca';
+const isSelf = (owner, name) => `${owner}/${name}`.toLowerCase() === SELF_REPO || name.toLowerCase() === 'repoteca';
+const selfError = () => Object.assign(new Error('En serio amig@? Pa qué? Meterías un garage dentro de un garage?'), { self: true });
+
 export async function addRepo(input, extra = {}) {
   const ref = parseRepoRef(input);
   if (!ref) throw new Error(`No es una URL de GitHub: ${input}`);
   const id = `${ref.owner}/${ref.name}`.toLowerCase();
   // Repoteca dentro de Repoteca: no.
-  if (ref.name.toLowerCase() === 'repoteca') throw Object.assign(new Error('En serio amig@? Pa qué? Meterías un garage dentro de un garage?'), { self: true });
+  if (isSelf(ref.owner, ref.name)) throw selfError();
 
   const existingBefore = readCatalog().repos.find((r) => r.id === id);
   if (existingBefore) return { repo: view(existingBefore), created: false };
@@ -117,6 +122,7 @@ export async function addRepo(input, extra = {}) {
 
   // GitHub devuelve el nombre canónico (los repos renombrados o movidos de org redirigen).
   const canonical = meta.fullName.toLowerCase();
+  if (isSelf(...meta.fullName.split('/'))) throw selfError(); // el repo renombrado o redirigido a Repoteca
   const c = readCatalog();
   const existing = c.repos.find((r) => r.id === canonical);
   if (existing) return { repo: view(existing), created: false };
