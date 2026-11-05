@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import {
-  ROOT, addMany, listRepos, getView, updateRepo, removeRepo, uninstallRepo, listCategories,
+  ROOT, addMany, importStars, listRepos, getView, updateRepo, removeRepo, uninstallRepo, listCategories,
   startJob, stopJob, stopAll, readLog, checkUpdate, checkAll, createDemo, reveal,
 } from './core.mjs';
 
@@ -49,6 +49,7 @@ async function api(req, url, parts) {
   }
   if (resource === 'check' && method === 'POST') return { repos: await checkAll() };
   if (resource === 'stop-all' && method === 'POST') return stopAll();
+  if (resource === 'import-stars' && method === 'POST') return importStars(await body(req));
 
   if (resource === 'repos' && owner && name) {
     const id = `${owner}/${name}`;

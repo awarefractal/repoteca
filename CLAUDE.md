@@ -5,6 +5,7 @@ Catálogo personal de repos de GitHub (ver `README.md`). Este proyecto tiene un 
 ## Cómo trabajar el catálogo
 
 - Si el usuario pega una URL de GitHub (o varias): `add_repos`. Antes mira `list_categories` y reutiliza una categoría existente si encaja; si no, crea una corta y clara. Añade 1–3 tags y, si el usuario dijo por qué le interesa, en `notes`.
+- Si el usuario quiere traer sus Stars de GitHub: `import_stars` (pregunta su usuario; no instala nada). Para terminar de probar varias cosas: `stop_all`.
 - Buscar o recomendar: `list_repos` con `query`/`category`/`status`.
 - `install_repo`, `run_repo` y `update_installed_repo` ejecutan código de terceros: solo cuando el usuario lo pida. Modo seguro: usa `install_repo` con `clone_only` (o `update_installed_repo` con `pull_only`), muéstrale al usuario `commands.installCmd` (`get_repo`) y solo si lo aprueba corre `install_deps`. Tras probar, pregunta si funciona y registra `verdict` con `update_repo`.
 - Demo propia: es la prueba del usuario, no se crea sola. Solo cuando lo pida: `create_demo` con `files` (HTML o scripts; `demo.json` con `run` si necesita ejecutar algo) y luego `run_demo` para verla. Vive en `data/demos/`, fuera del clon.

@@ -63,6 +63,7 @@
         <option value="sin-probar">Sin probar</option>
       </select>
       <button class="btn" id="checkAll" title="Consulta GitHub por cambios en todos los repos">⟳ Buscar actualizaciones</button>
+      <button class="btn" id="stars" title="Trae de golpe los repos que tienes con estrella en GitHub, sin instalar nada">★ Importar Stars</button>
     </div>
 
     <div id="cats" class="cats"></div>
@@ -138,6 +139,23 @@
         <span class="spacer"></span>
         <button class="btn ghost" value="cancel">Cancelar</button>
         <button class="btn go" id="eSave" value="save">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="starsDlg">
+    <form method="dialog" id="starsForm">
+      <div class="dlg-head"><small>VUELTA DE RECONOCIMIENTO</small><h2>Importar tus Stars de GitHub</h2></div>
+      <label>Usuario de GitHub <input class="field" name="user" placeholder="tu-usuario" autocomplete="off" spellcheck="false">
+        <span class="lbl-hint">Déjalo vacío para usar el dueño de <code>GITHUB_TOKEN</code> (incluye repos privados). Con usuario basta la API pública.</span>
+      </label>
+      <label>Categoría (opcional) <input class="field" name="category" list="catList" placeholder="Sin categoría"></label>
+      <p class="hint">Solo se agregan al catálogo con el tag <b>star</b>: no se instala nada. Hasta 300, los más recientes primero; los que ya tienes y Repoteca misma se omiten.</p>
+      <p class="hint err" id="sHint" hidden></p>
+      <div class="dlg-actions">
+        <span class="spacer"></span>
+        <button class="btn ghost" value="cancel">Cancelar</button>
+        <button class="btn go" id="sGo" value="import">Importar</button>
       </div>
     </form>
   </dialog>

@@ -33,7 +33,9 @@ No `npm install` needed: there are no dependencies. On Windows you can also doub
 - **Catalog:** paste one or many GitHub URLs. Metadata (description, stars, language, license, topics) comes from the public GitHub API. Add your own category, tags, notes and a verdict (`sin-probar` / `funciona` / `no-funciona`, i.e. untested / works / broken).
 - **Install / Try / Update:** clones the repo, launches it and shows it in a side panel, and updates with `git pull --ff-only`.
 - **Safe mode (on by default):** cloning does not run anything from the repo. Before `npm install`, `pip install` and the like, Repoteca shows the exact command and folder and waits for your confirmation. The shield in the header turns it off if you prefer one-click installs.
+- **Import your GitHub Stars:** one click (**★ Import Stars**) brings in everything you have starred, up to 300 at a time, without installing anything. Give a GitHub username (public API) or leave it empty to use the owner of `GITHUB_TOKEN`. Repos you already have are skipped.
 - **Check for updates:** compares the local commit with GitHub for the whole catalog.
+- **Checkered flag:** the "En pista" (running) tile has a flag button that stops everything that is running at once.
 - **Copy local path:** every installed repo has a small F1 circuit icon next to its other buttons (each repo gets its own track). Click it to copy the repo's local path to the clipboard, ready to paste into Claude Code, to start a project, to hand to another AI assistant, or to open in your editor.
 - **My demo:** your own quick test of each repo, kept outside the clone so updates never overwrite it.
 - **Search:** by name, description, category, tag, language or notes.
@@ -120,6 +122,8 @@ Pega una o varias URLs de GitHub y Enter. Cada card tiene:
 - **Mi demo:** tu propia prueba del repo. **Crear demo** arma una carpeta con una plantilla; la editas (o le pides a Claude que la arme) y **Ver demo** la muestra en vivo. Detalles abajo.
 - **Copiar ruta local:** cada repo instalado tiene un pequeño icono de circuito de F1 junto a sus otros botones (cada repo tiene su propia pista). Al hacer clic se copia al portapapeles la ruta local del repo, lista para pegarla en Claude Code y crear un proyecto, pasársela a otra IA o abrirla en tu editor.
 - "Buscar actualizaciones" consulta GitHub por cambios en todo el catálogo.
+- **★ Importar Stars** trae de golpe todo lo que tienes con estrella en GitHub (hasta 300 por vez), sin instalar nada. Indica un usuario de GitHub (API pública) o déjalo vacío para usar al dueño de `GITHUB_TOKEN`. Los repos que ya tienes se omiten.
+- La **bandera de cuadros** de la torre de tiempos («En pista») detiene de una vez todo lo que está corriendo.
 
 ## Usarla desde Claude Code
 

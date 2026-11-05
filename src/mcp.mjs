@@ -1,7 +1,7 @@
 // Servidor MCP (stdio) para operar el catálogo desde Claude Code. Sin dependencias: JSON-RPC por líneas.
 import readline from 'node:readline';
 import {
-  addMany, listRepos, listCategories, getView, updateRepo, removeRepo, uninstallRepo,
+  addMany, importStars, listRepos, listCategories, getView, updateRepo, removeRepo, uninstallRepo,
   startJob, stopJob, stopAll, waitJob, readLog, checkUpdate, checkAll, createDemo,
 } from './core.mjs';
 
@@ -56,6 +56,20 @@ const tools = [
       const r = await addMany(a.urls, a);
       return { added: r.added.map(brief), alreadyInCatalog: r.existing.map(brief), errors: r.errors };
     },
+  },
+  {
+    name: 'import_stars',
+    description: 'Importa de golpe los repos con estrella (Stars) de un usuario de GitHub al catálogo, sin instalar nada. Sin user usa los del dueño de GITHUB_TOKEN. Ya existentes y Repoteca misma se omiten. Pide primero el usuario y si quiere una categoría (puede dejarse sin categoría).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        user: str('Usuario de GitHub; vacío = el dueño de GITHUB_TOKEN'),
+        category: str('Categoría para todos los importados (opcional)'),
+        tags: { type: 'array', items: { type: 'string' }, description: 'Por defecto ["star"]' },
+        limit: { type: 'number', description: 'Máximo a importar, los más recientes primero (por defecto 300, tope 1000)' },
+      },
+    },
+    run: async (a) => importStars(a),
   },
   {
     name: 'list_repos',

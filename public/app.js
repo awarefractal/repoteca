@@ -478,6 +478,43 @@ $('#checkAll').addEventListener('click', async (e) => {
   b.textContent = '⟳ Buscar actualizaciones';
 });
 
+// ---------- importar Stars ----------
+
+$('#stars').addEventListener('click', () => {
+  const f = $('#starsForm');
+  try { f.user.value = localStorage.getItem('starsUser') || ''; } catch {}
+  f.category.value = '';
+  $('#sHint').hidden = true;
+  $('#starsDlg').showModal();
+  f.user.focus();
+});
+
+$('#starsForm').addEventListener('submit', async (e) => {
+  if (e.submitter?.value !== 'import') return;
+  e.preventDefault(); // el diálogo sigue abierto mientras trabaja, y si falla muestra el motivo
+  const f = e.target;
+  const btn = $('#sGo');
+  btn.disabled = true;
+  btn.textContent = 'Importando…';
+  $('#sHint').hidden = true;
+  try {
+    const r = await api('/import-stars', { method: 'POST', body: { user: f.user.value, category: f.category.value } });
+    try { localStorage.setItem('starsUser', f.user.value.trim()); } catch {}
+    $('#starsDlg').close();
+    const notes = [`Stars importados: ${r.added.length} nuevos de ${r.fetched} leídos${r.existing ? ` (${r.existing} ya estaban)` : ''}. No se instaló nada.`];
+    if (r.truncated) notes.push('Puede haber más Stars: se importaron solo los más recientes.');
+    flash(notes.join('\n'));
+    state.snapshot = '';
+    await refresh();
+  } catch (err) {
+    $('#sHint').textContent = err.message;
+    $('#sHint').hidden = false;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Importar';
+  }
+});
+
 const actions = {
   install: (v) => act(`/repos/${v.id}/install`, { method: 'POST', body: { safe: safeMode } }),
   update: (v) => act(`/repos/${v.id}/update`, { method: 'POST', body: { safe: safeMode } }),

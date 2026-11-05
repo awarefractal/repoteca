@@ -350,6 +350,9 @@ dialog form::before { content: ""; flex: none; display: block; height: 4px; marg
 dialog label { flex: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; color: var(--muted); font: 500 9px var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; }
 dialog .field { text-transform: none; letter-spacing: 0; }
 .hint { flex: none; color: var(--muted); font: 400 11px var(--f-mono); margin: -2px 0 10px; }
+.hint.err { color: var(--bad); }
+.hint[hidden] { display: none; }
+.hint b { color: var(--text); font-weight: 600; }
 dialog.ask { width: min(440px, 94vw); }
 .ask-body { flex: none; margin-bottom: 14px; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .ask-body p { margin: 0 0 8px; color: var(--text); }

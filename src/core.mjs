@@ -173,6 +173,66 @@ export async function addMany(text, extra = {}) {
   return out;
 }
 
+// Importa de golpe los repos con estrella de un usuario de GitHub (o los tuyos, con GITHUB_TOKEN). Solo los agrega al catálogo: no instala nada.
+// La lista de estrellas ya trae todos los metadatos, así que cuesta una consulta por cada 100 repos.
+export async function importStars({ user = '', category = '', tags = ['star'], limit = 300 } = {}) {
+  user = String(user).trim().replace(/^@/, '');
+  if (user && !/^[\w-]{1,39}$/.test(user)) throw new Error(`No parece un usuario de GitHub: ${user}`);
+  if (!user && !process.env.GITHUB_TOKEN) throw new Error('Indica tu usuario de GitHub (o define GITHUB_TOKEN para importar los tuyos, incluso los privados).');
+  limit = Math.max(1, Math.min(+limit || 300, 1000));
+
+  const base = user ? `/users/${user}/starred` : '/user/starred';
+  const starred = [];
+  let truncated = false;
+  for (let page = 1; starred.length < limit; page++) {
+    let batch;
+    try {
+      batch = await gh(`${base}?per_page=100&page=${page}`);
+    } catch (e) {
+      if (e.status === 404) throw new Error(`No existe el usuario de GitHub: ${user}`);
+      if (e.status === 401) throw new Error('GITHUB_TOKEN no es válido.');
+      throw e;
+    }
+    starred.push(...batch);
+    if (batch.length < 100) break;
+    if (starred.length >= limit) truncated = true;
+  }
+  const picked = starred.slice(0, limit);
+
+  const c = readCatalog();
+  const known = new Set(c.repos.map((r) => r.id));
+  const now = Date.now();
+  const out = { user: user || '(token)', fetched: picked.length, added: [], existing: 0, self: 0, truncated };
+  picked.forEach((j, i) => {
+    const [owner, name] = String(j.full_name).split('/');
+    const id = j.full_name.toLowerCase();
+    if (isSelf(owner, name)) return void out.self++;
+    if (known.has(id)) return void out.existing++;
+    known.add(id);
+    const meta = metaFrom(j);
+    c.repos.push({
+      id,
+      installPath: '',
+      url: `https://github.com/${meta.fullName}.git`,
+      ...meta,
+      category: category.trim(),
+      tags: tagList(tags),
+      notes: '',
+      verdict: 'sin-probar',
+      installCmd: '',
+      runCmd: '',
+      remoteSha: '',
+      metaError: '',
+      // un milisegundo menos por repo: conserva el orden de GitHub (la estrella más reciente arriba)
+      addedAt: new Date(now - i).toISOString(),
+      checkedAt: new Date(now).toISOString(),
+    });
+    out.added.push(id);
+  });
+  if (out.added.length) writeCatalog(c);
+  return out;
+}
+
 export function getRepo(ref) {
   const id = resolveId(ref);
   const repo = readCatalog().repos.find((r) => r.id === id);
