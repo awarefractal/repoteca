@@ -168,16 +168,21 @@ function visible() {
   });
 }
 
+// Bandera de cuadros dibujada aquí (un tablero de 4x3 en un mástil): solo geometría genérica.
+const FLAG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 21V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><g class="cloth"><rect x="6" y="4" width="14" height="9" fill="none" stroke="currentColor" stroke-width="1"/><path d="M6 4h3.5v3H6zM13 4h3.5v3H13zM9.5 7H13v3H9.5zM16.5 7H20v3h-3.5zM6 10h3.5v3H6zM13 10h3.5v3H13z"/></g></svg>';
+
 function renderTower() {
   const r = state.repos;
+  const live = r.filter((v) => v.status === 'ejecutando').length;
+  const flag = `<button type="button" class="flag-btn" data-a="flag" ${live ? '' : 'disabled'} data-tip="${live ? 'Bandera a cuadros: detiene todo lo que está en pista' : 'No hay nada en pista'}" aria-label="Bandera a cuadros: detener todo lo que está en pista">${FLAG}</button>`;
   const cells = [
     ['Repos', r.length, 'var(--text)', 'Todos los repos que tienes guardados en el catálogo.'],
     ['Instalados', r.filter((v) => v.installed).length, 'var(--ok)', 'Repos que ya están clonados en tu equipo y listos para probar.'],
     ['Sector morado', r.filter((v) => v.verdict === 'funciona').length, 'var(--violet)', 'Repos que probaste y marcaste como «Funciona». En F1, sector morado = el mejor tiempo.'],
     ['Actualizaciones', r.filter((v) => v.updateAvailable).length, 'var(--warn)', 'Repos instalados con cambios nuevos en GitHub. Usa «Buscar actualizaciones» para refrescar.'],
-    ['En pista', r.filter((v) => v.status === 'ejecutando').length, 'var(--cyan)', 'Repos o demos que están corriendo ahora mismo.'],
+    ['En pista', live, 'var(--cyan)', 'Repos o demos que están corriendo ahora mismo.', flag],
   ];
-  $('#tower').innerHTML = cells.map(([l, n, c, tip]) => `<div style="--c:${c}" data-tip="${esc(tip)}"><small>${l}</small><b>${String(n).padStart(2, '0')}</b></div>`).join('');
+  $('#tower').innerHTML = cells.map(([l, n, c, tip, extra = '']) => `<div style="--c:${c}" data-tip="${esc(tip)}"><small>${l}</small><b>${String(n).padStart(2, '0')}</b>${extra}</div>`).join('');
 }
 
 function renderCats() {
@@ -504,6 +509,16 @@ $('#grid').addEventListener('click', (e) => {
   const b = e.target.closest('[data-a]');
   const v = b && state.repos.find((r) => r.id === b.closest('.cell').dataset.id);
   if (v) actions[b.dataset.a](v, b);
+});
+
+// Bandera a cuadros: la bandera ondea, baja como al terminar la carrera y recién entonces se detiene todo.
+$('#tower').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-a="flag"]');
+  if (!b || b.disabled) return;
+  b.disabled = true;
+  b.classList.add('drop');
+  await new Promise((r) => setTimeout(r, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1100));
+  await act('/stop-all', { method: 'POST' });
 });
 
 $('#dActions').addEventListener('click', (e) => {

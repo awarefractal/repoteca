@@ -5,7 +5,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import {
   ROOT, addMany, listRepos, getView, updateRepo, removeRepo, uninstallRepo, listCategories,
-  startJob, stopJob, readLog, checkUpdate, checkAll, createDemo, reveal,
+  startJob, stopJob, stopAll, readLog, checkUpdate, checkAll, createDemo, reveal,
 } from './core.mjs';
 
 const PORT = +process.env.PORT || 4747;
@@ -48,6 +48,7 @@ async function api(req, url, parts) {
     }
   }
   if (resource === 'check' && method === 'POST') return { repos: await checkAll() };
+  if (resource === 'stop-all' && method === 'POST') return stopAll();
 
   if (resource === 'repos' && owner && name) {
     const id = `${owner}/${name}`;

@@ -555,6 +555,19 @@ export function stopJob(ref) {
   return readJob(id);
 }
 
+// Bandera a cuadros: detiene todo lo que está "en pista" (repos y demos en ejecución). Las instalaciones en curso no se tocan.
+export function stopAll() {
+  const stopped = [];
+  for (const r of readCatalog().repos) {
+    const j = readJob(r.id);
+    if (j?.state === 'running' && ['run', 'demo'].includes(j.kind)) {
+      stopJob(r.id);
+      stopped.push(r.id);
+    }
+  }
+  return { stopped };
+}
+
 export async function waitJob(ref, timeoutMs) {
   const id = resolveId(ref);
   const t0 = Date.now();

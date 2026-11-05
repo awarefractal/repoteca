@@ -64,6 +64,14 @@ test('acepta el Origin de la propia UI', async () => {
   assert.equal(r.status, 200);
 });
 
+test('la bandera a cuadros (stop-all) responde aunque no haya nada en pista', async () => {
+  const h = { host: `127.0.0.1:${port}`, origin: `http://127.0.0.1:${port}` };
+  const r = await call('/api/stop-all', { method: 'POST', headers: h });
+  assert.equal(r.status, 200);
+  assert.deepEqual(JSON.parse(r.body), { stopped: [] });
+  assert.equal((await call('/api/stop-all', { method: 'POST', headers: local() })).status, 403);
+});
+
 test('manda cabeceras que impiden incrustar la UI', async () => {
   const r = await call('/', { headers: local() });
   assert.equal(r.status, 200);

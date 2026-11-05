@@ -2,7 +2,7 @@
 import readline from 'node:readline';
 import {
   addMany, listRepos, listCategories, getView, updateRepo, removeRepo, uninstallRepo,
-  startJob, stopJob, waitJob, readLog, checkUpdate, checkAll, createDemo,
+  startJob, stopJob, stopAll, waitJob, readLog, checkUpdate, checkAll, createDemo,
 } from './core.mjs';
 
 const repoProp = { type: 'string', description: 'URL de GitHub o "owner/repo"' };
@@ -133,6 +133,7 @@ const tools = [
     run: async (a) => launch(a.repo, 'demo'),
   },
   { name: 'stop_repo', description: 'Detiene la ejecución (o instalación) en curso de un repo.', inputSchema: { type: 'object', properties: { repo: repoProp }, required: ['repo'] }, run: async (a) => ({ job: stopJob(a.repo)?.state ?? 'sin trabajo' }) },
+  { name: 'stop_all', description: 'Bandera a cuadros: detiene todo lo que está corriendo (repos y demos "en pista"). Úsala al terminar de probar varias cosas.', inputSchema: { type: 'object', properties: {} }, run: async () => stopAll() },
   {
     name: 'check_updates',
     description: 'Consulta GitHub por cambios (metadatos y commits nuevos de los instalados). Sin repo, revisa todo el catálogo.',
