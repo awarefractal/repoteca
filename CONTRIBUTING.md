@@ -31,10 +31,11 @@ Use a throwaway `REPOTECA_DATA` folder so your real catalog is never touched. On
 Before opening a pull request:
 
 ```bash
-for f in src/*.mjs public/*.js; do node --check "$f"; done
+for f in src/*.mjs test/*.mjs public/*.js; do node --check "$f"; done
+npm test
 ```
 
-The CI also starts the server and checks that it rejects requests with a foreign `Host`.
+The tests (`node --test`, no dependencies) cover the URL parser, the block on adding Repoteca to itself, and the server's `Host` / `Origin` checks. They use a throwaway data folder, never your real `data/`. The CI runs the same two steps.
 
 ## Pull requests
 
@@ -79,10 +80,11 @@ Usa una carpeta `REPOTECA_DATA` desechable para no tocar nunca tu catálogo real
 Antes de abrir un pull request:
 
 ```bash
-for f in src/*.mjs public/*.js; do node --check "$f"; done
+for f in src/*.mjs test/*.mjs public/*.js; do node --check "$f"; done
+npm test
 ```
 
-El CI además levanta el servidor y comprueba que rechaza peticiones con un `Host` ajeno.
+Los tests (`node --test`, sin dependencias) cubren el parser de URLs, el bloqueo de agregar Repoteca a sí misma y las comprobaciones de `Host` / `Origin` del servidor. Usan una carpeta de datos desechable, nunca tu `data/` real. El CI corre estos mismos dos pasos.
 
 ## Pull requests
 

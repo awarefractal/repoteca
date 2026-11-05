@@ -19,10 +19,6 @@ jobs:
       - name: Syntax check
         run: |
           node --version
-          for f in src/*.mjs; do node --check "$f"; done
-      - name: Server starts and answers on localhost
-        run: |
-          PORT=4799 node src/server.mjs &
-          sleep 2
-          curl -fsS http://127.0.0.1:4799/api/repos
-          curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: evil.example' http://127.0.0.1:4799/api/repos | grep -qx 403
+          for f in src/*.mjs test/*.mjs public/*.js; do node --check "$f"; done
+      - name: Tests
+        run: npm test
