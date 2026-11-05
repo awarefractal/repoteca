@@ -350,6 +350,10 @@ dialog form::before { content: ""; flex: none; display: block; height: 4px; marg
 dialog label { flex: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; color: var(--muted); font: 500 9px var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; }
 dialog .field { text-transform: none; letter-spacing: 0; }
 .hint { flex: none; color: var(--muted); font: 400 11px var(--f-mono); margin: -2px 0 10px; }
+.tagsuggest { flex: none; display: flex; flex-wrap: wrap; gap: 5px; margin: -2px 0 12px; }
+.tagchip { padding: 2px 9px; cursor: pointer; font: 500 11px var(--f-mono); color: var(--muted); background: transparent; border: 1px solid var(--line-strong); border-radius: 999px; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+.tagchip:hover { color: var(--text); border-color: var(--muted); }
+.tagchip.on { color: var(--text); border-color: var(--red); background: color-mix(in srgb, var(--red) 16%, transparent); }
 .hint.err { color: var(--bad); }
 .hint[hidden] { display: none; }
 .hint b { color: var(--text); font-weight: 600; }

@@ -38,7 +38,7 @@ No `npm install` needed: there are no dependencies. On Windows you can also doub
 - **Checkered flag:** the "En pista" (running) tile has a flag button that stops everything that is running at once.
 - **Copy local path:** every installed repo has a small F1 circuit icon next to its other buttons (each repo gets its own track). Click it to copy the repo's local path to the clipboard, ready to paste into Claude Code, to start a project, to hand to another AI assistant, or to open in your editor.
 - **My demo:** your own quick test of each repo, kept outside the clone so updates never overwrite it.
-- **Search:** by name, description, category, tag, language or notes.
+- **Search:** by name, description, category, tag, language or notes. The edit dialog suggests racing-flavoured tags (`pole`, `pit-stop`, `parc-ferme`, `safety-car`, `telemetria`…) you can toggle with one click.
 - **Claude Code / MCP:** the same data is exposed through an MCP server, so you can say "add https://github.com/…", "what do I have about AI?", "install and try X".
 
 ## Use it from Claude Code (MCP)
@@ -92,6 +92,8 @@ Issues and pull requests are welcome. Keep it dependency-free: the logic lives i
 
 [MIT](LICENSE). A courtesy Spanish translation is in [LICENSE.es.md](LICENSE.es.md); the English text is the one that applies. Third-party material (the F1 circuit outlines) is credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
+**Not affiliated with Formula 1.** Repoteca is an independent hobby project with a motorsport look and feel. It is not associated with, endorsed by or sponsored by Formula 1, the FIA or any team or driver. F1 and Formula 1 are trademarks of their respective owners. The project uses only generic racing vocabulary (pole, pit stop, checkered flag, telemetry…) and no logos, team or driver names, fonts or other official assets.
+
 ---
 
 # Español
@@ -122,6 +124,7 @@ Pega una o varias URLs de GitHub y Enter. Cada card tiene:
 - **Mi demo:** tu propia prueba del repo. **Crear demo** arma una carpeta con una plantilla; la editas (o le pides a Claude que la arme) y **Ver demo** la muestra en vivo. Detalles abajo.
 - **Copiar ruta local:** cada repo instalado tiene un pequeño icono de circuito de F1 junto a sus otros botones (cada repo tiene su propia pista). Al hacer clic se copia al portapapeles la ruta local del repo, lista para pegarla en Claude Code y crear un proyecto, pasársela a otra IA o abrirla en tu editor.
 - "Buscar actualizaciones" consulta GitHub por cambios en todo el catálogo.
+- **Tags de pista:** en Editar se sugieren tags con sabor a carreras (`pole`, `pit-stop`, `parc-ferme`, `safety-car`, `telemetria`…) que activas o quitas con un clic.
 - **★ Importar Stars** trae de golpe todo lo que tienes con estrella en GitHub (hasta 300 por vez), sin instalar nada. Indica un usuario de GitHub (API pública) o déjalo vacío para usar al dueño de `GITHUB_TOKEN`. Los repos que ya tienes se omiten.
 - La **bandera de cuadros** de la torre de tiempos («En pista») detiene de una vez todo lo que está corriendo.
 
@@ -176,3 +179,5 @@ Los issues y pull requests son bienvenidos. Mantenlo sin dependencias: la lógic
 ## Licencia
 
 [MIT](LICENSE). Hay una traducción de cortesía al español en [LICENSE.es.md](LICENSE.es.md); el texto que rige es el inglés. El material de terceros (los contornos de circuitos de F1) tiene sus créditos en [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+**Sin relación con la Fórmula 1.** Repoteca es un proyecto personal e independiente con estética de automovilismo. No está asociado, respaldado ni patrocinado por la Fórmula 1, la FIA ni ningún equipo o piloto. F1 y Formula 1 son marcas de sus respectivos dueños. El proyecto solo usa vocabulario genérico de carreras (pole, pit stop, bandera a cuadros, telemetría…) y ningún logo, nombre de equipo o piloto, tipografía u otro material oficial.

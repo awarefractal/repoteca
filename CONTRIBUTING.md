@@ -16,6 +16,7 @@ Thanks for wanting to help! Issues and pull requests are welcome. Please read th
 - **One source of truth:** the logic lives in `src/core.mjs`. `src/server.mjs` (web UI API) and `src/mcp.mjs` (MCP server) are thin layers on top of it.
 - **Keep the server safe:** it listens only on `127.0.0.1` and checks `Host` and `Origin`. Anything that runs commands must stay behind those checks. Escape every piece of third-party text you put in the UI (`esc()` in `public/app.js`).
 - **Language:** the UI is currently in Spanish. Translations and an English UI are welcome, ideally switchable instead of replacing the Spanish one. Documentation is English first with Spanish below.
+- **Racing theme, no official assets:** use generic motorsport vocabulary only. No Formula 1 / FIA logos, wordmarks, fonts, photos, or team and driver names.
 - **Third-party material** must be MIT/BSD/Apache-compatible and credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Try your changes
@@ -65,6 +66,7 @@ The tests (`node --test`, no dependencies) cover the URL parser, the block on ad
 - **Una sola fuente:** la lógica vive en `src/core.mjs`. `src/server.mjs` (API de la UI web) y `src/mcp.mjs` (servidor MCP) son capas finas encima.
 - **Mantén el servidor seguro:** escucha solo en `127.0.0.1` y comprueba `Host` y `Origin`. Todo lo que ejecute comandos debe seguir detrás de esas comprobaciones. Escapa cada texto de terceros que muestres en la UI (`esc()` en `public/app.js`).
 - **Idioma:** la UI está hoy en español. Las traducciones y una UI en inglés son bienvenidas, idealmente conmutables y sin reemplazar el español. La documentación va primero en inglés y debajo en español.
+- **Tema de carreras, sin material oficial:** usa solo vocabulario genérico del automovilismo. Nada de logos, marcas denominativas, tipografías o fotos de la Fórmula 1 o la FIA, ni nombres de equipos o pilotos.
 - **Material de terceros:** debe ser compatible con MIT/BSD/Apache y tener su crédito en [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## Probar tus cambios

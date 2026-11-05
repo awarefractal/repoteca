@@ -35,19 +35,19 @@ async function copyText(text) {
   }
 }
 
-// Cada categoría corre con una escudería: [color principal, secundario, color del texto encima]
+// Cada categoría corre con su propio color de equipo: [color principal, secundario, color del texto encima]
 const TEAMS = [
-  ['#e8002d', '#ff6a3c', '#fff'], // Ferrari
-  ['#27f4d2', '#00a19c', '#000'], // Mercedes
-  ['#3671c6', '#ffd400', '#fff'], // Red Bull
-  ['#ff8000', '#ffc04d', '#000'], // McLaren
-  ['#229971', '#7cf0b8', '#fff'], // Aston Martin
-  ['#0093cc', '#ff87bc', '#fff'], // Alpine
-  ['#64c4ff', '#005aff', '#000'], // Williams
-  ['#6692ff', '#ff3b3b', '#fff'], // Racing Bulls
-  ['#52e252', '#e8002d', '#000'], // Audi
+  ['#e8002d', '#ff6a3c', '#fff'], // rojo
+  ['#27f4d2', '#00a19c', '#000'], // turquesa
+  ['#3671c6', '#ffd400', '#fff'], // azul
+  ['#ff8000', '#ffc04d', '#000'], // naranja
+  ['#229971', '#7cf0b8', '#fff'], // verde
+  ['#0093cc', '#ff87bc', '#fff'], // celeste
+  ['#64c4ff', '#005aff', '#000'], // azul claro
+  ['#6692ff', '#ff3b3b', '#fff'], // azul periwinkle
+  ['#52e252', '#e8002d', '#000'], // lima
 ];
-const SILVER = ['#b6babd', '#e8002d', '#000']; // Haas: sin categoría
+const SILVER = ['#b6babd', '#e8002d', '#000']; // plata: sin categoría
 
 const STATUS_FILTERS = {
   'sin-instalar': (v) => v.status === 'sin-instalar',
@@ -612,6 +612,40 @@ $('#dClose').addEventListener('click', () => {
 
 let editing = null;
 
+// Tags sugeridos con vocabulario de pista (palabras genéricas del automovilismo, nada de marcas). Pulsa uno para ponerlo o quitarlo.
+const TRACK_TAGS = [
+  ['pole', 'Tu favorito: lo primero que abrirías'],
+  ['pit-stop', 'Rápido de instalar y usar: entras, lo pruebas y sales'],
+  ['vuelta-rapida', 'Destaca en velocidad o rendimiento'],
+  ['telemetria', 'Monitoreo, métricas, logs, observabilidad'],
+  ['parc-ferme', 'Estable: no lo toques, ya funciona'],
+  ['safety-car', 'Cuidado: inestable, experimental o con riesgos'],
+  ['undercut', 'Un truco o atajo que te da ventaja'],
+  ['clasificacion', 'Lo estás evaluando; falta decidir'],
+  ['podio', 'Entre lo mejor que tienes'],
+  ['boxes', 'Herramientas de taller: utilidades y mantenimiento'],
+];
+
+const tagsOf = (s) => s.split(',').map((t) => t.trim()).filter(Boolean);
+
+function paintTagSuggest() {
+  const have = new Set(tagsOf($('#editForm').tags.value).map((t) => t.toLowerCase()));
+  $('#tagSuggest').innerHTML = TRACK_TAGS.map(([t, tip]) => `<button type="button" class="tagchip ${have.has(t) ? 'on' : ''}" data-tag="${t}" title="${esc(tip)}" aria-pressed="${have.has(t)}">${t}</button>`).join('');
+}
+
+$('#tagSuggest').addEventListener('click', (e) => {
+  const t = e.target.closest('[data-tag]')?.dataset.tag;
+  if (!t) return;
+  const input = $('#editForm').tags;
+  const list = tagsOf(input.value);
+  const i = list.findIndex((x) => x.toLowerCase() === t);
+  if (i >= 0) list.splice(i, 1);
+  else list.push(t);
+  input.value = list.join(', ');
+  paintTagSuggest();
+});
+$('#editForm').tags.addEventListener('input', paintTagSuggest);
+
 function openEdit(id) {
   const v = state.repos.find((r) => r.id === id);
   if (!v) return;
@@ -620,6 +654,7 @@ function openEdit(id) {
   $('#eTitle').textContent = v.fullName;
   f.category.value = v.category;
   f.tags.value = v.tags.join(', ');
+  paintTagSuggest();
   f.notes.value = v.notes;
   f.verdict.value = v.verdict;
   f.installCmd.value = v.installCmd;
