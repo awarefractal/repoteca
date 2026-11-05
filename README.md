@@ -14,7 +14,7 @@ Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so y
 
 [Website](https://awarefractal.github.io/repoteca/) · License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
 
-![A 12-second walkthrough: paste a GitHub URL, tag it, install it, try it live in the side panel and stop everything with the checkered flag](docs/demo.gif)
+![A short walkthrough: paste a GitHub URL, tag it with racing-style tags and install it, all from the catalog](docs/demo.gif)
 
 > The web UI is currently in Spanish. The code, API and MCP tools are easy to follow; translations are welcome.
 
@@ -120,7 +120,7 @@ Pega una URL de GitHub y Repoteca la indexa, la instala cuando quieras, la ejecu
 
 [Sitio web](https://awarefractal.github.io/repoteca/) · Licencia: [MIT](LICENSE) · Requiere [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com)
 
-![Recorrido de 12 segundos: pega una URL de GitHub, ponle tags, instálalo, pruébalo en vivo en el panel lateral y detén todo con la bandera de cuadros](docs/demo.gif)
+![Recorrido corto: pega una URL de GitHub, ponle tags de pista e instálalo, todo desde el catálogo](docs/demo.gif)
 
 > La interfaz web está en español. El código, la API y las herramientas MCP son fáciles de seguir; las traducciones son bienvenidas.
 
