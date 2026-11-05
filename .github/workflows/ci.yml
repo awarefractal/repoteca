@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Syntax check
+        run: |
+          node --version
+          for f in src/*.mjs; do node --check "$f"; done
+      - name: Server starts and answers on localhost
+        run: |
+          PORT=4799 node src/server.mjs &
+          sleep 2
+          curl -fsS http://127.0.0.1:4799/api/repos
+          curl -s -o /dev/null -w '%{http_code}\n' -H 'Host: evil.example' http://127.0.0.1:4799/api/repos | grep -qx 403
