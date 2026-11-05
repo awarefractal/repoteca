@@ -1,0 +1,45 @@
+name: Bug report / Reporte de error
+description: Something does not work as expected / Algo no funciona como se espera
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security problem? Do not use this form.** Use *Security → Report a vulnerability*.
+        **¿Problema de seguridad? No uses este formulario.** Usa *Security → Report a vulnerability*.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / ¿Qué pasó?
+      description: Describe the problem and what you expected. / Describe el problema y lo que esperabas.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / Pasos para reproducirlo
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system / Sistema operativo
+      placeholder: Windows 11, macOS 15, Ubuntu 24.04
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version (`node -v`) / Versión de Node.js
+      placeholder: v22.12.0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots / Registros o capturas
+      description: Remove personal data such as paths with your user name, tokens or private repo names. / Quita datos personales como rutas con tu usuario, tokens o nombres de repos privados.
+      render: shell

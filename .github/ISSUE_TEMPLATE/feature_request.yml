@@ -1,0 +1,21 @@
+name: Feature request / Idea o mejora
+description: Suggest an improvement / Sugiere una mejora
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would it solve? / ¿Qué problema resolvería?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea / Tu idea
+      description: Keep in mind Repoteca has no dependencies and no build step. / Recuerda que Repoteca no tiene dependencias ni paso de build.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered / Alternativas que consideraste

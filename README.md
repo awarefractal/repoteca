@@ -77,7 +77,7 @@ Installing and running **executes third-party code on your machine** (`npm insta
 
 ## Contributing
 
-Issues and pull requests are welcome. Keep it dependency-free: the logic lives in `src/core.mjs`, and `server.mjs` (UI) and `mcp.mjs` are thin layers on top of it.
+Issues and pull requests are welcome. Keep it dependency-free: the logic lives in `src/core.mjs`, and `server.mjs` (UI) and `mcp.mjs` are thin layers on top of it. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -160,7 +160,7 @@ Instalar y probar **ejecuta código de terceros en tu equipo** (scripts de `npm 
 
 ## Contribuir
 
-Los issues y pull requests son bienvenidos. Mantenlo sin dependencias: la lógica vive en `src/core.mjs`, y `server.mjs` (UI) y `mcp.mjs` son capas finas encima.
+Los issues y pull requests son bienvenidos. Mantenlo sin dependencias: la lógica vive en `src/core.mjs`, y `server.mjs` (UI) y `mcp.mjs` son capas finas encima. Mira [CONTRIBUTING.md](CONTRIBUTING.md) y el [Código de Conducta](CODE_OF_CONDUCT.md).
 
 ## Licencia
 
