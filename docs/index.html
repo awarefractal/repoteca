@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repoteca · A garage for your GitHub repos</title>
+  <meta name="description" content="Catalog, install, try and update your GitHub repos in one place. Local-first, zero dependencies, with a safe install mode and an MCP server for Claude Code.">
+  <meta name="theme-color" content="#0b0c0f">
+  <link rel="canonical" href="https://awarefractal.github.io/repoteca/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Repoteca · A garage for your GitHub repos">
+  <meta property="og:description" content="Catalog them. Install them. Try them. Keep them updated.">
+  <meta property="og:url" content="https://awarefractal.github.io/repoteca/">
+  <meta property="og:image" content="https://awarefractal.github.io/repoteca/social-preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 2h24L24 30H0z' fill='%23e8002d'/%3E%3Cpath d='M13 8h13l-1.4 4H11.6zm-2.6 8h13l-1.4 4H9zm-2.6 8h9l-1.4 4H6.4z' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0b0c0f; --surface: #13151a; --raised: #1a1d24; --text: #eceef2; --muted: #9aa1b0;
+      --line: #242831; --line-strong: #353a47; --red: #e10600; --ok: #3ddc84; --warn: #f2c14e; --violet: #b58cff; --cyan: #2dd4bf;
+      --checker: conic-gradient(#f4f4f4 25%, #101010 0 50%, #f4f4f4 0 75%, #101010 0) 0 0 / 8px 8px;
+      --head: "Arial Narrow", "Barlow Condensed", system-ui, sans-serif;
+      --mono: ui-monospace, "JetBrains Mono", Consolas, "SF Mono", monospace;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg) radial-gradient(900px 420px at 8% -10%, #e1060015, transparent 70%) no-repeat; }
+    a { color: inherit; }
+    .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+    .strip { height: 8px; background: var(--checker); background-size: 8px 8px; }
+    [lang-only] { display: none; }
+    html[lang="en"] [lang-only="en"], html[lang="es"] [lang-only="es"] { display: revert; }
+
+    header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: italic 800 26px/1 var(--head); letter-spacing: .04em; }
+    .bars { display: flex; gap: 3px; }
+    .bars i { width: 6px; height: 28px; transform: skewX(-22deg); }
+    .bars i:nth-child(1) { background: var(--red); } .bars i:nth-child(2) { background: #ff8000; } .bars i:nth-child(3) { background: #27f4d2; }
+    nav { display: flex; align-items: center; gap: 18px; font-size: 14px; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--text); }
+    .lang { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; overflow: hidden; }
+    .lang button { padding: 3px 11px; border: 0; cursor: pointer; font: 600 12px var(--mono); color: var(--muted); background: transparent; }
+    .lang button[aria-pressed="true"] { color: #fff; background: var(--red); }
+
+    .hero { padding: 36px 0 28px; text-align: center; }
+    .hero h1 { margin: 0 0 10px; font: italic 800 clamp(34px, 6vw, 58px)/1.05 var(--head); letter-spacing: .01em; }
+    .hero h1 em { color: #ff8000; }
+    .hero p.lead { max-width: 640px; margin: 0 auto 22px; color: var(--muted); font-size: 18px; }
+    .cover { display: block; width: 100%; margin: 26px auto 0; border: 1px solid var(--line-strong); border-radius: 14px; box-shadow: 0 24px 60px #000a; }
+
+    .clone { display: flex; max-width: 800px; margin: 0 auto 14px; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: var(--surface); text-align: left; }
+    .clone code { flex: 1; min-width: 0; padding: 13px 16px; overflow-x: auto; white-space: nowrap; font: 13px/1.5 var(--mono); color: var(--text); }
+    .clone code span { color: var(--muted); }
+    .clone button { flex: none; padding: 0 22px; border: 0; cursor: pointer; font: italic 800 13px var(--head); letter-spacing: .1em; text-transform: uppercase; color: #fff; background: linear-gradient(100deg, var(--red), #8c0400); }
+    .clone button:hover { filter: brightness(1.15); }
+    .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 4px; }
+    .btn { padding: 9px 20px; border: 1px solid var(--line-strong); border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600; background: var(--surface); }
+    .btn:hover { border-color: var(--muted); }
+    :focus-visible { outline: 2px solid var(--text); outline-offset: 3px; border-radius: 6px; }
+    .note { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+    section { padding: 40px 0; }
+    h2 { margin: 0 0 6px; font: italic 800 32px/1.15 var(--head); letter-spacing: .02em; }
+    h2::before { content: ""; display: block; width: 56px; height: 4px; margin-bottom: 12px; background: var(--red); }
+    .sub { margin: 0 0 24px; color: var(--muted); max-width: 640px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+    .card { padding: 18px 18px 16px; border: 1px solid var(--line); border-top: 3px solid var(--c, var(--red)); border-radius: 10px; background: linear-gradient(180deg, var(--raised), var(--surface)); }
+    .card h3 { margin: 0 0 4px; font: italic 800 19px var(--head); letter-spacing: .03em; }
+    .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    .card code { font: 12.5px var(--mono); color: var(--text); }
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line-strong); border-radius: 12px; }
+    figcaption { margin-top: 8px; font: 12px var(--mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .why { max-width: 720px; }
+    .why p { color: var(--muted); }
+    footer { margin-top: 20px; padding: 26px 0 34px; border-top: 1px solid var(--line); background: var(--surface); font-size: 13px; color: var(--muted); }
+    footer p { margin: 0 0 8px; }
+    footer a { color: var(--text); }
+    @media (max-width: 720px) { .two { grid-template-columns: 1fr; } nav .hide-s { display: none; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <div class="strip" aria-hidden="true"></div>
+  <header>
+    <div class="wrap">
+      <a class="logo" href="#top"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>REPOTECA</a>
+      <nav aria-label="Main">
+        <a class="hide-s" href="#features"><span lang-only="en">Features</span><span lang-only="es">Funciones</span></a>
+        <a class="hide-s" href="#screens"><span lang-only="en">Screens</span><span lang-only="es">Capturas</span></a>
+        <a href="https://github.com/awarefractal/repoteca">GitHub</a>
+        <span class="lang" role="group" aria-label="Language"><button type="button" data-l="en" aria-pressed="true">EN</button><button type="button" data-l="es" aria-pressed="false">ES</button></span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap hero">
+      <h1><span lang-only="en">Catalog them. Install them.<br>Try them. <em>Keep them updated.</em></span><span lang-only="es">Cataloga. Instala.<br>Prueba. <em>Mantén al día.</em></span></h1>
+      <p class="lead">
+        <span lang-only="en">A garage for your GitHub repos. Paste a URL and Repoteca indexes it, installs it on demand, runs it so you can try it, and tells you when it has news. Everything is local.</span>
+        <span lang-only="es">Un garage para tus repos de GitHub. Pega una URL y Repoteca la indexa, la instala cuando quieras, la ejecuta para que la pruebes y te avisa si tiene novedades. Todo corre en local.</span>
+      </p>
+      <div class="clone">
+        <code id="cmd"><span>$</span> git clone https://github.com/awarefractal/repoteca.git &amp;&amp; cd repoteca &amp;&amp; npm start</code>
+        <button type="button" id="copy"><span lang-only="en">Copy</span><span lang-only="es">Copiar</span></button>
+      </div>
+      <div class="cta">
+        <a class="btn" href="https://github.com/awarefractal/repoteca">★ <span lang-only="en">View on GitHub</span><span lang-only="es">Ver en GitHub</span></a>
+        <a class="btn" href="https://github.com/awarefractal/repoteca/archive/refs/heads/main.zip"><span lang-only="en">Download ZIP</span><span lang-only="es">Descargar ZIP</span></a>
+      </div>
+      <p class="note"><span lang-only="en">Needs Node.js 20+ and git. No <code>npm install</code>: there are no dependencies.</span><span lang-only="es">Requiere Node.js 20+ y git. Sin <code>npm install</code>: no tiene dependencias.</span></p>
+      <img class="cover" src="social-preview.png" width="1280" height="640" alt="Repoteca: Catalog them. Install them. Try them. Keep them updated. Next to a screenshot of the catalog as cards.">
+    </div>
+
+    <section id="demo">
+      <div class="wrap">
+        <h2><span lang-only="en">12 seconds, start to finish</span><span lang-only="es">12 segundos, de principio a fin</span></h2>
+        <p class="sub"><span lang-only="en">Paste a URL, tag it, install it, try it live in the side panel, and stop everything with the checkered flag.</span><span lang-only="es">Pega una URL, ponle tags, instálalo, pruébalo en vivo en el panel lateral y detén todo con la bandera de cuadros.</span></p>
+        <figure><img src="demo.gif" width="880" height="495" loading="lazy" alt="Screen recording: a GitHub URL is pasted, tagged, installed and run live in the side panel, then everything is stopped with the checkered flag."></figure>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <h2><span lang-only="en">What it does</span><span lang-only="es">Qué hace</span></h2>
+        <p class="sub"><span lang-only="en">One small local app instead of clones scattered over your disk.</span><span lang-only="es">Una app local y pequeña, en vez de clones desparramados por el disco.</span></p>
+        <div class="grid">
+          <div class="card" style="--c:var(--red)"><h3><span lang-only="en">Catalog</span><span lang-only="es">Catálogo</span></h3><p><span lang-only="en">Paste one or many URLs. Description, stars, language and license come from GitHub; add your own category, tags, notes and verdict.</span><span lang-only="es">Pega una o varias URLs. Descripción, estrellas, lenguaje y licencia vienen de GitHub; tú agregas categoría, tags, notas y veredicto.</span></p></div>
+          <div class="card" style="--c:var(--ok)"><h3><span lang-only="en">Safe install</span><span lang-only="es">Instalación segura</span></h3><p><span lang-only="en">Cloning runs nothing. Before <code>npm install</code> or <code>pip install</code>, you see the exact command and folder and confirm.</span><span lang-only="es">Clonar no ejecuta nada. Antes de <code>npm install</code> o <code>pip install</code> ves el comando y la carpeta exactos y confirmas.</span></p></div>
+          <div class="card" style="--c:var(--cyan)"><h3><span lang-only="en">Try it live</span><span lang-only="es">Pruébalo en vivo</span></h3><p><span lang-only="en">Launch a repo and see it in a side panel, with its log next to it. One checkered flag stops everything that is running.</span><span lang-only="es">Levanta un repo y míralo en un panel lateral, con su registro al lado. Una bandera de cuadros detiene todo lo que corre.</span></p></div>
+          <div class="card" style="--c:var(--warn)"><h3><span lang-only="en">Stay updated</span><span lang-only="es">Al día</span></h3><p><span lang-only="en">Compares each local commit with GitHub and updates with <code>git pull --ff-only</code>.</span><span lang-only="es">Compara cada commit local con GitHub y actualiza con <code>git pull --ff-only</code>.</span></p></div>
+          <div class="card" style="--c:var(--violet)"><h3><span lang-only="en">Import your Stars</span><span lang-only="es">Importa tus Stars</span></h3><p><span lang-only="en">Bring in everything you have starred in one go, without installing anything.</span><span lang-only="es">Trae de golpe todo lo que marcaste con estrella, sin instalar nada.</span></p></div>
+          <div class="card" style="--c:#ff8000"><h3><span lang-only="en">Your own demos</span><span lang-only="es">Tus propias demos</span></h3><p><span lang-only="en">Keep your test of each repo outside the clone, so updates never overwrite it.</span><span lang-only="es">Guarda tu prueba de cada repo fuera del clon: actualizar nunca la pisa.</span></p></div>
+          <div class="card" style="--c:#27f4d2"><h3>Claude Code · MCP</h3><p><span lang-only="en">The same data is exposed through an MCP server: "add this URL", "what do I have about AI?", "install and try X".</span><span lang-only="es">Los mismos datos salen por un servidor MCP: «agrega esta URL», «qué tengo de IA», «instala y prueba X».</span></p></div>
+          <div class="card" style="--c:#3671c6"><h3><span lang-only="en">Local and private</span><span lang-only="es">Local y privado</span></h3><p><span lang-only="en">No telemetry, no database, zero dependencies. Your catalog is one readable JSON file in <code>data/</code>.</span><span lang-only="es">Sin telemetría, sin base de datos, cero dependencias. Tu catálogo es un JSON legible en <code>data/</code>.</span></p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screens">
+      <div class="wrap">
+        <h2><span lang-only="en">Dark and light</span><span lang-only="es">Oscuro y claro</span></h2>
+        <p class="sub"><span lang-only="en">It follows your system theme and you can switch it from the header.</span><span lang-only="es">Sigue el tema de tu sistema y lo cambias desde la cabecera.</span></p>
+        <div class="two">
+          <figure><img src="screenshot.png" width="1440" height="960" loading="lazy" alt="Repoteca in the dark theme"><figcaption>Dark</figcaption></figure>
+          <figure><img src="screenshot-light.png" width="1440" height="960" loading="lazy" alt="Repoteca in the light theme"><figcaption>Light</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="wrap why">
+        <h2><span lang-only="en">Why it exists</span><span lang-only="es">Por qué existe</span></h2>
+        <p lang-only="en">I star repos much faster than I try them. They pile up in a Stars list I never reopen, or as clones scattered over my disk, half installed and forgotten. Repoteca is the garage I wanted: every repo with a status, my own notes and verdict, a demo that survives updates, and a button to try it that I can stop with one click. It is local-first and dependency-free on purpose: small enough to read in an afternoon and to trust.</p>
+        <p lang-only="es">Marco con estrella muchos más repos de los que alcanzo a probar. Se acumulan en una lista de Stars que no vuelvo a abrir, o como clones desparramados por el disco, a medio instalar y olvidados. Repoteca es el garage que quería: cada repo con su estado, mis notas y mi veredicto, una demo que sobrevive a las actualizaciones y un botón para probarlo que detengo con un clic. Es local y sin dependencias a propósito: lo bastante pequeño para leerlo en una tarde y confiar en él.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>MIT License · <a href="https://github.com/awarefractal/repoteca">github.com/awarefractal/repoteca</a> · <a href="https://github.com/awarefractal/repoteca/blob/main/SECURITY.md">Security</a> · <a href="https://github.com/awarefractal/repoteca/blob/main/THIRD_PARTY_NOTICES.md">Third-party notices</a></p>
+      <p><span lang-only="en">Independent hobby project with a motorsport look and feel. Not affiliated with, endorsed by or sponsored by Formula 1, the FIA or any team or driver. F1 and Formula 1 are trademarks of their respective owners.</span><span lang-only="es">Proyecto personal e independiente con estética de automovilismo. Sin relación con la Fórmula 1, la FIA ni ningún equipo o piloto. F1 y Formula 1 son marcas de sus respectivos dueños.</span></p>
+    </div>
+  </footer>
+  <div class="strip" aria-hidden="true"></div>
+
+  <script>
+    // Idioma: el guardado, o el del navegador.
+    const root = document.documentElement;
+    const setLang = (l) => {
+      root.lang = l;
+      document.querySelectorAll('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.l === l)));
+      try { localStorage.setItem('lang', l); } catch {}
+    };
+    let saved = null;
+    try { saved = localStorage.getItem('lang'); } catch {}
+    setLang(saved || ((navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en'));
+    document.querySelectorAll('.lang button').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.l)));
+
+    // Botón de copiar el comando de clonado.
+    document.getElementById('copy').addEventListener('click', async (e) => {
+      const btn = e.currentTarget;
+      const text = 'git clone https://github.com/awarefractal/repoteca.git && cd repoteca && npm start';
+      try { await navigator.clipboard.writeText(text); } catch {
+        const r = document.createRange(); r.selectNodeContents(document.getElementById('cmd'));
+        getSelection().removeAllRanges(); getSelection().addRange(r);
+      }
+      const old = btn.innerHTML;
+      btn.textContent = root.lang === 'es' ? '¡Copiado!' : 'Copied!';
+      setTimeout(() => (btn.innerHTML = old), 1600);
+    });
+  </script>
+</body>
+</html>
