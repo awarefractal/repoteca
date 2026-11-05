@@ -27,6 +27,7 @@ No `npm install` needed: there are no dependencies. On Windows you can also doub
 - **Catalog:** paste one or many GitHub URLs. Metadata (description, stars, language, license, topics) comes from the public GitHub API. Add your own category, tags, notes and a verdict (`sin-probar` / `funciona` / `no-funciona`, i.e. untested / works / broken).
 - **Install / Try / Update:** clones the repo and runs its install step, launches it and shows it in a side panel, and updates with `git pull --ff-only`.
 - **Check for updates:** compares the local commit with GitHub for the whole catalog.
+- **Copy local path:** every installed repo has a small F1 circuit icon next to its other buttons (each repo gets its own track). Click it to copy the repo's local path to the clipboard, ready to paste into Claude Code, to start a project, to hand to another AI assistant, or to open in your editor.
 - **My demo:** your own quick test of each repo, kept outside the clone so updates never overwrite it.
 - **Search:** by name, description, category, tag, language or notes.
 - **Claude Code / MCP:** the same data is exposed through an MCP server, so you can say "add https://github.com/…", "what do I have about AI?", "install and try X".
@@ -80,7 +81,7 @@ Issues and pull requests are welcome. Keep it dependency-free: the logic lives i
 
 ## License
 
-[MIT](LICENSE). A courtesy Spanish translation is in [LICENSE.es.md](LICENSE.es.md); the English text is the one that applies.
+[MIT](LICENSE). A courtesy Spanish translation is in [LICENSE.es.md](LICENSE.es.md); the English text is the one that applies. Third-party material (the F1 circuit outlines) is credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -110,6 +111,7 @@ Pega una o varias URLs de GitHub y Enter. Cada card tiene:
 
 - **Instalar** (clona y corre la instalación), **Probar** (levanta el repo y lo muestra en el panel lateral), **Actualizar** y **Editar** (llave de mecánico: categoría, tags, notas, veredicto, comandos, **Desinstalar** y **Eliminar**; el ícono de terminal abre la telemetría).
 - **Mi demo:** tu propia prueba del repo. **Crear demo** arma una carpeta con una plantilla; la editas (o le pides a Claude que la arme) y **Ver demo** la muestra en vivo. Detalles abajo.
+- **Copiar ruta local:** cada repo instalado tiene un pequeño icono de circuito de F1 junto a sus otros botones (cada repo tiene su propia pista). Al hacer clic se copia al portapapeles la ruta local del repo, lista para pegarla en Claude Code y crear un proyecto, pasársela a otra IA o abrirla en tu editor.
 - "Buscar actualizaciones" consulta GitHub por cambios en todo el catálogo.
 
 ## Usarla desde Claude Code
@@ -162,4 +164,4 @@ Los issues y pull requests son bienvenidos. Mantenlo sin dependencias: la lógic
 
 ## Licencia
 
-[MIT](LICENSE). Hay una traducción de cortesía al español en [LICENSE.es.md](LICENSE.es.md); el texto que rige es el inglés.
+[MIT](LICENSE). Hay una traducción de cortesía al español en [LICENSE.es.md](LICENSE.es.md); el texto que rige es el inglés. El material de terceros (los contornos de circuitos de F1) tiene sus créditos en [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

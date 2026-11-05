@@ -221,6 +221,7 @@ dialog .select { width: 100%; }
 .pos { margin-left: 4px; font: italic 700 36px/1 var(--f-head); color: color-mix(in srgb, var(--t) 30%, transparent); -webkit-text-stroke: 1.5px color-mix(in srgb, var(--t) 85%, var(--text)); pointer-events: none; }
 :root[data-theme="light"] .pos { color: color-mix(in srgb, var(--t) 22%, transparent); -webkit-text-stroke-color: color-mix(in srgb, var(--t) 60%, var(--text)); }
 .edit-btn svg { width: 18px; height: 18px; }
+.track-btn svg { width: 20px; height: 20px; }
 .edit-btn:hover { color: var(--t); }
 .card-head { display: flex; gap: 11px; align-items: center; position: relative; }
 .avatar {

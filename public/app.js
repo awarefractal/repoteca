@@ -7,6 +7,30 @@ const state = { repos: [], q: '', cat: '', status: '', drawerId: null, tab: 'dem
 const METRICS = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g transform="translate(5 0) skewX(-14)"><rect x="1.5" y="14" width="3.2" height="7" rx=".7"/><rect x="6.5" y="9" width="3.2" height="12" rx=".7"/><rect x="11.5" y="4" width="3.2" height="17" rx=".7"/><rect x="16.5" y="11" width="3.2" height="10" rx=".7"/></g></svg>';
 const WRENCH ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
 
+// Cada repo tiene "su" circuito (siempre el mismo, según su id): dibujos de public/circuits.js.
+function trackIcon(id) {
+  const list = window.CIRCUITS || [];
+  if (!list.length) return '';
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const [, d] = list[h % list.length];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const t = Object.assign(document.createElement('textarea'), { value: text });
+    t.style.cssText = 'position:fixed;opacity:0';
+    document.body.append(t);
+    t.select();
+    const ok = document.execCommand('copy');
+    t.remove();
+    if (!ok) throw new Error('No pude copiar al portapapeles.');
+  }
+}
+
 // Cada categoría corre con una escudería: [color principal, secundario, color del texto encima]
 const TEAMS = [
   ['#e8002d', '#ff6a3c', '#fff'], // Ferrari
@@ -228,6 +252,7 @@ function card(v, i) {
           </div>
         </div>
         <div class="head-side">
+          ${v.localPath ? `<button class="icon-btn edit-btn track-btn" data-a="copy-path" data-tip="Copiar ruta local de este repo" aria-label="Copiar ruta local de este repo">${trackIcon(v.id)}</button>` : ''}
           ${v.installed && !busy ? `<button class="icon-btn edit-btn" data-a="log" data-tip="Telemetría: el registro de lo que hizo la instalación o la última ejecución" aria-label="Telemetría">${METRICS}</button>` : ''}
           <button class="icon-btn edit-btn" data-a="edit" data-tip="Editar: categoría, tags, notas, comandos, desinstalar o eliminar" aria-label="Editar">${WRENCH}</button>
           <span class="pos">P${i + 1}</span>
@@ -450,6 +475,21 @@ const actions = {
     }
   },
   'folder-demo': (v) => act(`/repos/${v.id}/reveal`, { method: 'POST', body: { what: 'demo' } }),
+  // Copia la ruta del clon: sirve para abrirlo como proyecto en Claude, pasárselo a otra IA o a un editor.
+  'copy-path': async (v, btn) => {
+    const original = btn.dataset.tip;
+    try {
+      await copyText(v.localPath);
+      btn.dataset.tip = '¡Ruta copiada!';
+    } catch (e) {
+      btn.dataset.tip = 'No se pudo copiar';
+      flash(e.message);
+    }
+    showTip(btn);
+    setTimeout(() => {
+      if (btn.isConnected) btn.dataset.tip = original;
+    }, 1600);
+  },
   stop: (v) => act(`/repos/${v.id}/stop`, { method: 'POST' }),
   live: (v) => openDrawer(v.id, 'demo'),
   log: (v) => openDrawer(v.id, 'log'),
@@ -463,7 +503,7 @@ const actions = {
 $('#grid').addEventListener('click', (e) => {
   const b = e.target.closest('[data-a]');
   const v = b && state.repos.find((r) => r.id === b.closest('.cell').dataset.id);
-  if (v) actions[b.dataset.a](v);
+  if (v) actions[b.dataset.a](v, b);
 });
 
 $('#dActions').addEventListener('click', (e) => {

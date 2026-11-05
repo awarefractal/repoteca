@@ -16,6 +16,7 @@ Catálogo personal de repos de GitHub (ver `README.md`). Este proyecto tiene un 
 
 - Una sola fuente: la lógica vive en `src/core.mjs`; `server.mjs` (UI) y `mcp.mjs` son capas finas encima.
 - Sin dependencias ni build. Idioma: español.
+- Los iconos de pista (`public/circuits.js`) salen de bacinger/f1-circuits (MIT): mantén sus créditos en `THIRD_PARTY_NOTICES.md`.
 
 ## Git
 
