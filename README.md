@@ -12,7 +12,7 @@
 
 Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so you can try it right away, tells you when it has new commits, and keeps your own notes and demos next to it. Everything is local, with zero dependencies and no database (the catalog is a readable JSON file).
 
-License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
+[Website](https://awarefractal.github.io/repoteca/) · License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
 
 ![A 12-second walkthrough: paste a GitHub URL, tag it, install it, try it live in the side panel and stop everything with the checkered flag](docs/demo.gif)
 
@@ -118,7 +118,7 @@ Issues and pull requests are welcome. Keep it dependency-free: the logic lives i
 
 Pega una URL de GitHub y Repoteca la indexa, la instala cuando quieras, la ejecuta para que la pruebes al instante, te avisa si tiene commits nuevos y guarda tus notas y tus demos junto a ella. Todo corre en local, sin dependencias y sin base de datos (el catálogo es un JSON legible).
 
-Licencia: [MIT](LICENSE) · Requiere [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com)
+[Sitio web](https://awarefractal.github.io/repoteca/) · Licencia: [MIT](LICENSE) · Requiere [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com)
 
 ![Recorrido de 12 segundos: pega una URL de GitHub, ponle tags, instálalo, pruébalo en vivo en el panel lateral y detén todo con la bandera de cuadros](docs/demo.gif)
 
