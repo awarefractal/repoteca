@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "repoteca": {
+      "command": "node",
+      "args": ["src/mcp.mjs"]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+# Everything personal (catalog, clones, demos, logs) lives in data/ and is never shared.
+data/
+
+# Dependencies
+node_modules/
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.claude/settings.local.json
+.claude/*.local.*
+
+# Logs and temp files
+*.log
+*.tmp
+npm-debug.log*
+
+# OS and editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
