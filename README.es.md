@@ -9,7 +9,7 @@ Tu garage de repos de GitHub: indexados, instalables, probables en el momento, c
 Requisitos: [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com).
 
 ```bash
-git clone https://github.com/<tu-usuario>/repoteca.git
+git clone https://github.com/awarefractal/repoteca.git
 cd repoteca
 npm start
 ```

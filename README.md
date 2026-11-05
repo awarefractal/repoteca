@@ -11,7 +11,7 @@ Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so y
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/repoteca.git
+git clone https://github.com/awarefractal/repoteca.git
 cd repoteca
 npm start
 ```
