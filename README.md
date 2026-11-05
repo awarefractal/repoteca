@@ -14,9 +14,25 @@ Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so y
 
 License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
 
-![Repoteca web UI showing a catalog of GitHub repos as cards, with categories, search and install buttons](docs/screenshot.png)
+![A 12-second walkthrough: paste a GitHub URL, tag it, install it, try it live in the side panel and stop everything with the checkered flag](docs/demo.gif)
 
 > The web UI is currently in Spanish. The code, API and MCP tools are easy to follow; translations are welcome.
+
+## Why it exists
+
+I star repos much faster than I try them. They pile up in a Stars list I never reopen, or as clones scattered over my disk, half installed and forgotten. Every time I wondered "did I already try that one? did it work? is there news?", I had to dig for the answer.
+
+Repoteca is the garage I wanted: one place where every repo has a status, my own notes and verdict, a demo of my own that survives updates, and a button to try it that I can stop with one click. And since trying someone else's code means running it, installing is deliberate: Repoteca clones first and shows me the exact command before it runs anything.
+
+It is local-first and dependency-free on purpose: small enough to read in an afternoon and to trust.
+
+## Dark and light
+
+| Dark | Light |
+| --- | --- |
+| ![Repoteca in the dark theme: six repo cards with team-colored borders, the time-tower summary and the safe-mode shield](docs/screenshot.png) | ![Repoteca in the light theme, same catalog](docs/screenshot-light.png) |
+
+The theme follows your system and can be switched from the header.
 
 ## Quick start
 
@@ -104,7 +120,19 @@ Pega una URL de GitHub y Repoteca la indexa, la instala cuando quieras, la ejecu
 
 Licencia: [MIT](LICENSE) · Requiere [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com)
 
+![Recorrido de 12 segundos: pega una URL de GitHub, ponle tags, instálalo, pruébalo en vivo en el panel lateral y detén todo con la bandera de cuadros](docs/demo.gif)
+
 > La interfaz web está en español. El código, la API y las herramientas MCP son fáciles de seguir; las traducciones son bienvenidas.
+
+## Por qué existe
+
+Marco con estrella muchos más repos de los que alcanzo a probar. Se acumulan en una lista de Stars que no vuelvo a abrir, o como clones desparramados por el disco, a medio instalar y olvidados. Cada vez que me preguntaba «¿ya probé ese?, ¿funcionó?, ¿tiene novedades?», tenía que ponerme a buscar la respuesta.
+
+Repoteca es el garage que quería: un solo lugar donde cada repo tiene su estado, mis notas y mi veredicto, una demo mía que sobrevive a las actualizaciones y un botón para probarlo que detengo con un clic. Y como probar código ajeno es ejecutarlo, instalar es una decisión deliberada: Repoteca clona primero y me muestra el comando exacto antes de correr nada.
+
+Es local y sin dependencias a propósito: lo bastante pequeño para leerlo en una tarde y confiar en él.
+
+Capturas en tema oscuro y claro: mira la [versión en inglés](#repoteca).
 
 ## Instalar (desde cero)
 
