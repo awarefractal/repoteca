@@ -1,10 +1,12 @@
+**[English]** · [(En español más abajo)](#español)
+
 # Repoteca
 
 **A garage for your GitHub repos.** Keep them cataloged, installed, tried out and up to date in one place, instead of scattered all over your disk.
 
 Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so you can try it right away, tells you when it has new commits, and keeps your own notes and demos next to it. Everything is local, with zero dependencies and no database (the catalog is a readable JSON file).
 
-[Español](README.es.md) · License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
+License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
 
 ![Repoteca web UI showing a catalog of GitHub repos as cards, with categories, search and install buttons](docs/screenshot.png)
 
@@ -22,7 +24,7 @@ No `npm install` needed: there are no dependencies. On Windows you can also doub
 
 ## What it does
 
-- **Catalog:** paste one or many GitHub URLs. Metadata (description, stars, language, license, topics) comes from the public GitHub API. Add your own category, tags, notes and a verdict (`untested` / `works` / `broken`).
+- **Catalog:** paste one or many GitHub URLs. Metadata (description, stars, language, license, topics) comes from the public GitHub API. Add your own category, tags, notes and a verdict (`sin-probar` / `funciona` / `no-funciona`, i.e. untested / works / broken).
 - **Install / Try / Update:** clones the repo and runs its install step, launches it and shows it in a side panel, and updates with `git pull --ff-only`.
 - **Check for updates:** compares the local commit with GitHub for the whole catalog.
 - **My demo:** your own quick test of each repo, kept outside the clone so updates never overwrite it.
@@ -78,4 +80,86 @@ Issues and pull requests are welcome. Keep it dependency-free: the logic lives i
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). A courtesy Spanish translation is in [LICENSE.es.md](LICENSE.es.md); the English text is the one that applies.
+
+---
+
+# Español
+
+**Un garage para tus repos de GitHub.** Tenlos catalogados, instalados, probados y al día en un solo lugar, en vez de desparramados por el disco.
+
+Pega una URL de GitHub y Repoteca la indexa, la instala cuando quieras, la ejecuta para que la pruebes al instante, te avisa si tiene commits nuevos y guarda tus notas y tus demos junto a ella. Todo corre en local, sin dependencias y sin base de datos (el catálogo es un JSON legible).
+
+Licencia: [MIT](LICENSE) · Requiere [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com)
+
+> La interfaz web está en español. El código, la API y las herramientas MCP son fáciles de seguir; las traducciones son bienvenidas.
+
+## Instalar (desde cero)
+
+```bash
+git clone https://github.com/awarefractal/repoteca.git
+cd repoteca
+npm start
+```
+
+Sin `npm install`: no tiene dependencias. En Windows también sirve el doble clic a `start.cmd`. Se abre `http://localhost:4747` (otro puerto: variable `PORT`). Corre siempre en tu equipo; para "dejarlo disponible" basta con dejar abierta esa ventana o crear un acceso directo a `start.cmd`.
+
+## Usarla
+
+Pega una o varias URLs de GitHub y Enter. Cada card tiene:
+
+- **Instalar** (clona y corre la instalación), **Probar** (levanta el repo y lo muestra en el panel lateral), **Actualizar** y **Editar** (llave de mecánico: categoría, tags, notas, veredicto, comandos, **Desinstalar** y **Eliminar**; el ícono de terminal abre la telemetría).
+- **Mi demo:** tu propia prueba del repo. **Crear demo** arma una carpeta con una plantilla; la editas (o le pides a Claude que la arme) y **Ver demo** la muestra en vivo. Detalles abajo.
+- "Buscar actualizaciones" consulta GitHub por cambios en todo el catálogo.
+
+## Usarla desde Claude Code
+
+Abre esta carpeta en Claude Code: `.mcp.json` registra el servidor `repoteca` (apruébalo la primera vez). Luego basta con "agrega https://github.com/…", "qué tengo de IA", "instala y prueba X", "arma mi demo de X". Desde otra carpeta:
+
+```bash
+claude mcp add repoteca --scope user -- node /ruta/a/repoteca/src/mcp.mjs
+```
+
+La UI y Claude comparten los mismos datos.
+
+## Dónde queda todo
+
+Una sola carpeta, `data/` (ignorada por git; muévela con la variable `REPOTECA_DATA`). Para respaldar o pasar tu catálogo a otro equipo, copia esa carpeta.
+
+| Qué | Dónde |
+| --- | --- |
+| Catálogo (JSON legible) | `data/catalog.json` |
+| Clones instalados por Repoteca | `data/repos/owner__name/` |
+| Tus demos | `data/demos/owner__name/` (fuera del clon: actualizar nunca las pisa) |
+| Registros y estado de trabajos | `data/logs/`, `data/jobs/` |
+
+Un repo que ya tenías clonado en otra carpeta se registra **en su sitio** (campo `installPath`, vía Claude con `add_repos` + `installPath`): no se mueve ni se duplica, y Repoteca nunca borra carpetas que no instaló.
+
+## Mi demo
+
+`data/demos/owner__name/index.html` se sirve solo. Si necesitas ejecutar algo, agrega `demo.json`:
+
+```json
+{ "run": "node prueba.js" }
+```
+
+El comando corre en la carpeta de la demo y recibe `REPO_DIR` (el repo instalado) y `PORT` (el puerto donde debe escuchar si es un servidor).
+
+## Detalles
+
+- **Cómo instala/prueba:** detecta Node (`npm|pnpm|yarn`, script `dev` o `start`), Python (`requirements.txt`/`pyproject.toml` en un `.venv`; prueba `app.py`/`main.py`), Rust, Go y HTML estático. Si no acierta, defínelo en Editar. En `installCmd`, `-` significa "no reinstalar nunca".
+- **Actualizaciones:** compara el commit local con el de GitHub; "Actualizar" hace `git pull --ff-only` y reinstala.
+- **Metadatos:** API pública de GitHub (60 consultas/hora sin token). Define `GITHUB_TOKEN` para más cupo y repos privados.
+- **Privacidad:** sin telemetría. Las únicas conexiones son a la API de GitHub, a los remotos de `git` y, al cargar la UI en tu navegador, a Google Fonts y a los avatares de GitHub.
+
+## Seguridad
+
+Instalar y probar **ejecuta código de terceros en tu equipo** (scripts de `npm install`, etc.). Revisa lo que instalas. El servidor solo escucha en `127.0.0.1` y rechaza peticiones que no vengan de su propia UI. No expongas su puerto a una red. Mira [SECURITY.md](SECURITY.md) para el detalle y cómo reportar una vulnerabilidad.
+
+## Contribuir
+
+Los issues y pull requests son bienvenidos. Mantenlo sin dependencias: la lógica vive en `src/core.mjs`, y `server.mjs` (UI) y `mcp.mjs` son capas finas encima.
+
+## Licencia
+
+[MIT](LICENSE). Hay una traducción de cortesía al español en [LICENSE.es.md](LICENSE.es.md); el texto que rige es el inglés.

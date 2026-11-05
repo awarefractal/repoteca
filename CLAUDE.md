@@ -16,3 +16,8 @@ Catálogo personal de repos de GitHub (ver `README.md`). Este proyecto tiene un 
 
 - Una sola fuente: la lógica vive en `src/core.mjs`; `server.mjs` (UI) y `mcp.mjs` son capas finas encima.
 - Sin dependencias ni build. Idioma: español.
+
+## Git
+
+- El autor de todo es el dueño del repo (`awarefractal`). Ningún commit, PR ni archivo lleva líneas `Co-Authored-By` ni «Generated with Claude» ni créditos a Claude.
+- Identidad de git de este repo: nombre `awarefractal` y email noreply de GitHub; nunca el email personal.
