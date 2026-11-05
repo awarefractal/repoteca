@@ -78,6 +78,11 @@ function serveStatic(res, pathname) {
 }
 
 const server = http.createServer(async (req, res) => {
+  // La UI no debe poder incrustarse en otra página (clickjacking sobre Instalar/Probar).
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'none'");
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
   try {
     guard(req);
     const url = new URL(req.url, `http://${req.headers.host}`);
