@@ -6,6 +6,8 @@ Paste a GitHub URL, and Repoteca indexes it, installs it on demand, runs it so y
 
 [Español](README.es.md) · License: [MIT](LICENSE) · Needs [Node.js 20+](https://nodejs.org) and [git](https://git-scm.com)
 
+![Repoteca web UI showing a catalog of GitHub repos as cards, with categories, search and install buttons](docs/screenshot.png)
+
 > The web UI is currently in Spanish. The code, API and MCP tools are easy to follow; translations are welcome.
 
 ## Quick start

@@ -4,6 +4,8 @@ Tu garage de repos de GitHub: indexados, instalables, probables en el momento, c
 
 [English](README.md) · Licencia: [MIT](LICENSE) · Seguridad: [SECURITY.md](SECURITY.md)
 
+![Interfaz web de Repoteca con un catálogo de repos de GitHub como tarjetas, con categorías, búsqueda y botones de instalar](docs/screenshot.png)
+
 ## Instalar (desde cero)
 
 Requisitos: [Node.js 20+](https://nodejs.org) y [git](https://git-scm.com).
