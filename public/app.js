@@ -1,6 +1,10 @@
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+// Modo seguro (activo por defecto): instalar o actualizar no ejecuta el comando de instalación hasta que lo confirmas.
+let safeMode = true;
+try { safeMode = localStorage.getItem('safe') !== '0'; } catch {}
+
 const state = { repos: [], q: '', cat: '', status: '', drawerId: null, tab: 'demo', snapshot: '', teams: {}, open: new Set() };
 
 // Barras inclinadas, como las del logo y las de un trazado de telemetría.
@@ -150,6 +154,7 @@ const STATUS_BADGE = {
   actualizando: ['var(--warn)', TIRE, 'Actualizando…'],
   ejecutando: ['var(--ok)', LIGHTS, 'En pista'],
   fallo: ['var(--bad)', led, 'Falló'],
+  'dependencias-pendientes': ['var(--warn)', led, 'Faltan dependencias'],
   'actualizacion-disponible': ['var(--warn)', led, 'Actualización'],
   instalado: ['var(--ok)', led, 'Instalado'],
   'sin-instalar': ['var(--muted)', led, 'Sin instalar'],
@@ -225,12 +230,13 @@ function card(v, i) {
   const [owner, name] = v.fullName.split('/');
   const running = v.status === 'ejecutando';
   const busy = v.status === 'instalando' || v.status === 'actualizando';
-  const hasRun = v.installed && v.commands.runCmd;
+  const hasRun = v.installed && v.commands.runCmd && !v.depsPending;
 
   const buttons = [];
   if (busy) buttons.push(`<button class="btn sm" data-a="log">Ver progreso</button><button class="btn sm stop" data-a="stop">Cancelar</button>`);
   else if (running && v.liveKind === 'run') buttons.push(`<button class="btn sm go" data-a="live">Ver en vivo</button><button class="btn sm stop" data-a="stop">Detener</button>`);
   else if (!v.installed) buttons.push(`<button class="btn sm go" data-a="install">Instalar</button>`);
+  else if (v.depsPending) buttons.push(`<button class="btn sm warn" data-a="deps">Instalar dependencias</button>`);
   else {
     if (hasRun && !running) buttons.push(`<button class="btn sm go" data-a="run">▶ Probar</button>`);
     if (v.updateAvailable && !running) buttons.push(`<button class="btn sm warn" data-a="update">↑ Actualizar</button>`);
@@ -439,6 +445,21 @@ $('#theme').addEventListener('click', () => {
   try { localStorage.setItem('theme', next); } catch {}
 });
 
+function paintSafe() {
+  const b = $('#safe');
+  b.setAttribute('aria-pressed', String(safeMode));
+  b.dataset.tip = safeMode
+    ? 'Modo seguro ACTIVO: antes de instalar dependencias (npm install, pip install…) te muestro el comando y pido confirmar. Pulsa para desactivarlo.'
+    : 'Modo seguro DESACTIVADO: instalar y actualizar ejecutan el comando de instalación sin preguntar. Pulsa para activarlo.';
+}
+$('#safe').addEventListener('click', () => {
+  safeMode = !safeMode;
+  try { localStorage.setItem('safe', safeMode ? '1' : '0'); } catch {}
+  paintSafe();
+  showTip($('#safe'));
+});
+paintSafe();
+
 $('#msgClose').addEventListener('click', () => flash(''));
 
 $('#q').addEventListener('input', (e) => ((state.q = e.target.value), render()));
@@ -458,8 +479,21 @@ $('#checkAll').addEventListener('click', async (e) => {
 });
 
 const actions = {
-  install: (v) => act(`/repos/${v.id}/install`, { method: 'POST' }),
-  update: (v) => act(`/repos/${v.id}/update`, { method: 'POST' }),
+  install: (v) => act(`/repos/${v.id}/install`, { method: 'POST', body: { safe: safeMode } }),
+  update: (v) => act(`/repos/${v.id}/update`, { method: 'POST', body: { safe: safeMode } }),
+  // Modo seguro: muestra el comando exacto y la carpeta antes de ejecutar código de terceros.
+  deps: async (v) => {
+    const cmd = v.commands.installCmd;
+    const ok = await ask({
+      kind: 'MODO SEGURO',
+      title: `Instalar dependencias de ${v.fullName}`,
+      text: 'El repo ya está clonado, pero aún no se ejecutó nada suyo. Instalar dependencias corre código de terceros en tu equipo (scripts de instalación) con tus permisos. Revisa el comando:',
+      lines: [['Carpeta: ', v.localPath], ['Comando: ', cmd]],
+      yes: 'Ejecutar',
+      danger: true,
+    });
+    if (ok) await act(`/repos/${v.id}/deps`, { method: 'POST' });
+  },
   run: async (v) => {
     await act(`/repos/${v.id}/run`, { method: 'POST' });
     openDrawer(v.id, 'demo');

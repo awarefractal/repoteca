@@ -233,6 +233,7 @@ export function uninstallRepo(ref) {
   stopJob(repo.id);
   wipe(dir);
   for (const f of [jobFile(repo.id), logFile(repo.id)]) fs.rmSync(f, { force: true });
+  markDeps(repo.id, false);
   return view(repo);
 }
 
@@ -456,10 +457,21 @@ export function reveal(ref, what) {
 
 function statusOf(v) {
   const j = v.job;
-  if (j?.state === 'running') return { install: 'instalando', update: 'actualizando', run: 'ejecutando', demo: 'ejecutando' }[j.kind];
+  if (j?.state === 'running') return { install: 'instalando', deps: 'instalando', update: 'actualizando', run: 'ejecutando', demo: 'ejecutando' }[j.kind];
   if (j?.state === 'failed' || j?.state === 'interrupted') return 'fallo';
   if (!v.installed) return 'sin-instalar';
+  if (v.depsPending) return 'dependencias-pendientes';
   return v.updateAvailable ? 'actualizacion-disponible' : 'instalado';
+}
+
+// Modo seguro: el clon (o el pull) no ejecuta código del repo; la instalación de dependencias queda pendiente hasta que el usuario confirme el comando.
+export function markDeps(ref, pending) {
+  try {
+    mutate(resolveId(ref), (r) => {
+      if (pending) r.depsPending = true;
+      else delete r.depsPending;
+    });
+  } catch {}
 }
 
 function view(repo) {
@@ -473,6 +485,7 @@ function view(repo) {
     head,
     updateAvailable: !!(installed && repo.remoteSha && head && repo.remoteSha !== head),
     job,
+    depsPending: installed && !!repo.depsPending,
     commands: installed ? effectiveCommands(repo, dir) : { installCmd: '', runCmd: '', detected: '' },
     localPath: installed ? dir : '',
     managed: !repo.installPath, // el clon lo creó Repoteca (se puede borrar); si no, es uno adoptado
@@ -518,7 +531,9 @@ export function patchJob(id, patch) {
   } catch {}
 }
 
-export function startJob(ref, kind) {
+// kind: install | update | deps | run | demo. Con safe, install y update no ejecutan el comando de instalación:
+// dejan las dependencias pendientes (status "dependencias-pendientes") hasta que se lance "deps" tras confirmarlo.
+export function startJob(ref, kind, { safe = false } = {}) {
   const repo = getRepo(ref);
   if (readJob(repo.id)?.state === 'running') throw new Error('Ya hay un trabajo en curso para este repo.');
   const installed = fs.existsSync(path.join(localDir(repo), '.git'));
@@ -527,13 +542,16 @@ export function startJob(ref, kind) {
   } else if (kind === 'install') {
     if (installed) throw new Error('Ya está instalado (usa actualizar).');
   } else if (!installed) throw new Error('El repo no está instalado.');
+  if (kind === 'deps' && !effectiveCommands(repo, localDir(repo)).installCmd) {
+    throw new Error('Este repo no tiene comando de instalación de dependencias.');
+  }
   if (kind === 'run' && !effectiveCommands(repo, localDir(repo)).runCmd) {
     throw new Error('No hay comando para ejecutarlo: define "runCmd" en el repo.');
   }
   fs.mkdirSync(JOBS, { recursive: true });
   fs.mkdirSync(LOGS, { recursive: true });
   fs.writeFileSync(logFile(repo.id), '');
-  const child = spawn(process.execPath, [path.join(ROOT, 'src', 'runner.mjs'), repo.id, kind], {
+  const child = spawn(process.execPath, [path.join(ROOT, 'src', 'runner.mjs'), repo.id, kind, ...(safe ? ['--safe'] : [])], {
     detached: true,
     stdio: 'ignore',
     windowsHide: true,

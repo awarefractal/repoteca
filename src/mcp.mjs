@@ -65,7 +65,7 @@ const tools = [
       properties: {
         query: { type: 'string' },
         category: { type: 'string' },
-        status: str('sin-instalar | instalado | actualizacion-disponible | ejecutando | fallo | funciona | no-funciona | sin-probar'),
+        status: str('sin-instalar | instalado | dependencias-pendientes | actualizacion-disponible | ejecutando | fallo | funciona | no-funciona | sin-probar'),
       },
     },
     run: async (a) => listRepos({ q: a.query, category: a.category, status: a.status }).map(brief),
@@ -104,15 +104,21 @@ const tools = [
   },
   {
     name: 'install_repo',
-    description: 'Clona el repo en repos/ y ejecuta su instalación de dependencias. Ejecuta código de terceros: solo cuando el usuario lo pida. Espera a que termine (hasta 10 min).',
+    description: 'Clona el repo en repos/ y ejecuta su instalación de dependencias. Ejecuta código de terceros: solo cuando el usuario lo pida. Con clone_only solo clona (no ejecuta nada del repo) y deja las dependencias pendientes: muéstrale al usuario el comando (commands.installCmd de get_repo) y, si lo aprueba, usa install_deps. Espera a que termine (hasta 10 min).',
+    inputSchema: { type: 'object', properties: { repo: repoProp, clone_only: { type: 'boolean', description: 'Solo clonar; dependencias pendientes de confirmar (modo seguro)' } }, required: ['repo'] },
+    run: async (a) => finished(startJob(a.repo, 'install', { safe: !!a.clone_only }), a.repo, 600000),
+  },
+  {
+    name: 'install_deps',
+    description: 'Ejecuta el comando de instalación de dependencias de un repo ya clonado (npm install, pip install…). Ejecuta código de terceros: confirma antes con el usuario mostrándole el comando exacto (commands.installCmd de get_repo).',
     inputSchema: { type: 'object', properties: { repo: repoProp }, required: ['repo'] },
-    run: async (a) => finished(startJob(a.repo, 'install'), a.repo, 600000),
+    run: async (a) => finished(startJob(a.repo, 'deps'), a.repo, 600000),
   },
   {
     name: 'update_installed_repo',
-    description: 'Trae los últimos cambios de un repo instalado (git pull) y reinstala dependencias.',
-    inputSchema: { type: 'object', properties: { repo: repoProp }, required: ['repo'] },
-    run: async (a) => finished(startJob(a.repo, 'update'), a.repo, 600000),
+    description: 'Trae los últimos cambios de un repo instalado (git pull) y reinstala dependencias. Con pull_only solo trae el código y, si hubo cambios, deja las dependencias pendientes de confirmar (ver install_deps).',
+    inputSchema: { type: 'object', properties: { repo: repoProp, pull_only: { type: 'boolean', description: 'Solo git pull; dependencias pendientes de confirmar (modo seguro)' } }, required: ['repo'] },
+    run: async (a) => finished(startJob(a.repo, 'update', { safe: !!a.pull_only }), a.repo, 600000),
   },
   {
     name: 'run_repo',

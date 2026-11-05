@@ -31,7 +31,8 @@ No `npm install` needed: there are no dependencies. On Windows you can also doub
 ## What it does
 
 - **Catalog:** paste one or many GitHub URLs. Metadata (description, stars, language, license, topics) comes from the public GitHub API. Add your own category, tags, notes and a verdict (`sin-probar` / `funciona` / `no-funciona`, i.e. untested / works / broken).
-- **Install / Try / Update:** clones the repo and runs its install step, launches it and shows it in a side panel, and updates with `git pull --ff-only`.
+- **Install / Try / Update:** clones the repo, launches it and shows it in a side panel, and updates with `git pull --ff-only`.
+- **Safe mode (on by default):** cloning does not run anything from the repo. Before `npm install`, `pip install` and the like, Repoteca shows the exact command and folder and waits for your confirmation. The shield in the header turns it off if you prefer one-click installs.
 - **Check for updates:** compares the local commit with GitHub for the whole catalog.
 - **Copy local path:** every installed repo has a small F1 circuit icon next to its other buttons (each repo gets its own track). Click it to copy the repo's local path to the clipboard, ready to paste into Claude Code, to start a project, to hand to another AI assistant, or to open in your editor.
 - **My demo:** your own quick test of each repo, kept outside the clone so updates never overwrite it.
@@ -79,7 +80,7 @@ The command runs inside the demo folder and receives `REPO_DIR` (the installed r
 
 ## Security
 
-Installing and running **executes third-party code on your machine** (`npm install` scripts, build steps, the repo itself). Review what you install. The server listens only on `127.0.0.1` and rejects requests that do not come from its own UI. Do not expose its port to a network. See [SECURITY.md](SECURITY.md) for details and how to report a vulnerability.
+Installing and running **executes third-party code on your machine** (`npm install` scripts, build steps, the repo itself). Review what you install. Safe mode makes you confirm the install command before it runs, but it cannot tell you whether the code is trustworthy. The server listens only on `127.0.0.1` and rejects requests that do not come from its own UI. Do not expose its port to a network. See [SECURITY.md](SECURITY.md) for details and how to report a vulnerability.
 
 ## Contributing
 
@@ -115,7 +116,7 @@ Sin `npm install`: no tiene dependencias. En Windows también sirve el doble cli
 
 Pega una o varias URLs de GitHub y Enter. Cada card tiene:
 
-- **Instalar** (clona y corre la instalación), **Probar** (levanta el repo y lo muestra en el panel lateral), **Actualizar** y **Editar** (llave de mecánico: categoría, tags, notas, veredicto, comandos, **Desinstalar** y **Eliminar**; el ícono de terminal abre la telemetría).
+- **Instalar** (clona; el **modo seguro**, activo por defecto, no ejecuta nada del repo al clonar y, antes de `npm install`, `pip install` y similares, te muestra el comando exacto y la carpeta y espera tu confirmación; el escudo de la cabecera lo desactiva), **Probar** (levanta el repo y lo muestra en el panel lateral), **Actualizar** y **Editar** (llave de mecánico: categoría, tags, notas, veredicto, comandos, **Desinstalar** y **Eliminar**; el ícono de terminal abre la telemetría).
 - **Mi demo:** tu propia prueba del repo. **Crear demo** arma una carpeta con una plantilla; la editas (o le pides a Claude que la arme) y **Ver demo** la muestra en vivo. Detalles abajo.
 - **Copiar ruta local:** cada repo instalado tiene un pequeño icono de circuito de F1 junto a sus otros botones (cada repo tiene su propia pista). Al hacer clic se copia al portapapeles la ruta local del repo, lista para pegarla en Claude Code y crear un proyecto, pasársela a otra IA o abrirla en tu editor.
 - "Buscar actualizaciones" consulta GitHub por cambios en todo el catálogo.
@@ -162,7 +163,7 @@ El comando corre en la carpeta de la demo y recibe `REPO_DIR` (el repo instalado
 
 ## Seguridad
 
-Instalar y probar **ejecuta código de terceros en tu equipo** (scripts de `npm install`, etc.). Revisa lo que instalas. El servidor solo escucha en `127.0.0.1` y rechaza peticiones que no vengan de su propia UI. No expongas su puerto a una red. Mira [SECURITY.md](SECURITY.md) para el detalle y cómo reportar una vulnerabilidad.
+Instalar y probar **ejecuta código de terceros en tu equipo** (scripts de `npm install`, etc.). Revisa lo que instalas. El modo seguro te hace confirmar el comando de instalación antes de ejecutarlo, pero no puede decirte si el código es de fiar. El servidor solo escucha en `127.0.0.1` y rechaza peticiones que no vengan de su propia UI. No expongas su puerto a una red. Mira [SECURITY.md](SECURITY.md) para el detalle y cómo reportar una vulnerabilidad.
 
 ## Contribuir
 

@@ -74,7 +74,11 @@ h1 em { font-style: italic; color: transparent; -webkit-text-stroke: 1.5px var(-
 .icon-btn { display: inline-grid; place-items: center; padding: 6px; border: 0; background: none; color: var(--muted); cursor: pointer; transition: color 0.15s, transform 0.15s; }
 .icon-btn:hover { color: var(--text); }
 .icon-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; border-radius: 6px; }
-.icon-btn.theme { flex: none; }
+.icon-btn.theme, .icon-btn.safe { flex: none; }
+.safe svg { width: 20px; height: 20px; }
+.safe[aria-pressed="true"] { color: var(--ok); }
+.safe[aria-pressed="true"] .off, .safe[aria-pressed="false"] .tick { display: none; }
+.safe[aria-pressed="false"] { color: var(--warn); }
 .theme svg { width: 20px; height: 20px; flex: none; }
 .theme .sun { display: none; }
 :root[data-theme="light"] .theme .sun { display: block; }
@@ -367,7 +371,7 @@ dialog.ask { width: min(440px, 94vw); }
 @media (max-width: 760px) {
   .bar { flex-wrap: wrap; gap: 12px; }
   .add { order: 3; flex-basis: 100%; }
-  .theme { margin-left: auto; }
+  .safe { margin-left: auto; }
   .tower { grid-template-columns: repeat(2, 1fr); }
   .select { width: 100%; }
 }

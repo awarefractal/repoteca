@@ -1,10 +1,11 @@
-// Proceso desacoplado que ejecuta un trabajo de un repo: node runner.mjs <owner/name> <install|update|run>
+// Proceso desacoplado que ejecuta un trabajo de un repo: node runner.mjs <owner/name> <install|update|deps|run|demo> [--safe]
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
-import { ROOT, REPOS, getRepo, localDir, demoDir, demoCommand, demoEnv, effectiveCommands, patchJob, logFile, freePort } from './core.mjs';
+import { spawn, execFileSync } from 'node:child_process';
+import { ROOT, REPOS, getRepo, localDir, demoDir, demoCommand, demoEnv, effectiveCommands, patchJob, markDeps, logFile, freePort } from './core.mjs';
 
-const [id, kind] = process.argv.slice(2);
+const [id, kind, flag] = process.argv.slice(2);
+const safe = flag === '--safe';
 const repo = getRepo(id);
 const dir = localDir(repo);
 const log = fs.createWriteStream(logFile(id), { flags: 'a' });
@@ -30,16 +31,38 @@ function sh(cmd, cwd, env = {}) {
   });
 }
 
+const head = () => {
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: dir, encoding: 'utf8' }).trim();
+  } catch {
+    return '';
+  }
+};
+
 let code = 0;
 if (kind === 'install' || kind === 'update') {
+  let changed = true;
   if (kind === 'install') {
     fs.mkdirSync(REPOS, { recursive: true });
     code = await sh(`git clone --depth 1 "${repo.url}" "${dir}"`, ROOT);
   } else {
+    const before = head();
     code = await sh('git pull --ff-only', dir);
+    changed = head() !== before;
   }
   const installCmd = code === 0 ? effectiveCommands(repo, dir).installCmd : '';
-  if (installCmd) code = await sh(installCmd, dir);
+  if (installCmd && safe) {
+    // Modo seguro: clonar o traer cambios no ejecuta código del repo; las dependencias esperan la confirmación del usuario.
+    if (changed) markDeps(id, true);
+    log.write(changed ? '\n[modo seguro] Dependencias sin instalar: confirma el comando para ejecutarlo.\n' : '\n[sin cambios nuevos: no hace falta reinstalar]\n');
+  } else if (installCmd) {
+    code = await sh(installCmd, dir);
+    if (code === 0) markDeps(id, false);
+  }
+} else if (kind === 'deps') {
+  const { installCmd } = effectiveCommands(repo, dir);
+  code = installCmd ? await sh(installCmd, dir) : 0;
+  if (code === 0) markDeps(id, false);
 } else if (kind === 'run') {
   const { runCmd } = effectiveCommands(repo, dir);
   code = await sh(runCmd, dir, { PORT: String(await freePort()), BROWSER: 'none' });

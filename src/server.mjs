@@ -59,7 +59,9 @@ async function api(req, url, parts) {
     }
     if (method === 'GET' && action === 'log') return { log: readLog(id, +url.searchParams.get('tail') || 300) };
     if (method === 'POST') {
-      if (['install', 'update', 'run', 'demo'].includes(action)) return startJob(id, action);
+      // Modo seguro por defecto: instalar y actualizar no corren el comando de instalación sin confirmación (safe: false lo desactiva).
+      if (['install', 'update'].includes(action)) return startJob(id, action, { safe: (await body(req)).safe !== false });
+      if (['deps', 'run', 'demo'].includes(action)) return startJob(id, action);
       if (action === 'create-demo') return createDemo(id);
       if (action === 'reveal') return reveal(id, (await body(req)).what);
       if (action === 'stop') return stopJob(id);
